@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
@@ -15,12 +16,13 @@ public class DynamicCharacter implements Drawable {
 	
 	private AnimationController animations;
 	private Body dynamicBody;
-	
 	private TextureRegion currentFrame;
 
 	private float stateTime = 0f;
 	private float x, y;
-	
+
+	private boolean dead;
+
 	public DynamicCharacter(float x, float y){
 		this.x = x;
 		this.y = y;
@@ -33,6 +35,8 @@ public class DynamicCharacter implements Drawable {
 	@Override
 	public void dispose() {
 		currentFrame.getTexture().dispose();
+		dynamicBody.destroyFixture(getFixture());
+		dynamicBody.getWorld().destroyBody(dynamicBody);
 	}
 
 	@Override
@@ -135,5 +139,37 @@ public class DynamicCharacter implements Drawable {
 	 */
 	public void setStateTime(float stateTime) {
 		this.stateTime = stateTime;
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	public Fixture getFixture() {
+		return dynamicBody.getFixtureList().get(0);
+	}
+
+	/**
+	 * 
+	 * @param dead
+	 */
+	public void setDead(boolean dead) {
+		this.dead = dead;
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	public boolean isDead() {
+		return dead;
+	}
+	
+	/**
+	 * 
+	 * @param restitution
+	 */
+	public void setResititution(float restitution) {
+		getDynamicBody().getFixtureList().get(0).setRestitution(restitution);
 	}
 }

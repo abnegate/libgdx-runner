@@ -14,6 +14,7 @@ import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.ContactImpulse;
 import com.badlogic.gdx.physics.box2d.ContactListener;
+import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.Manifold;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
@@ -95,9 +96,11 @@ public class WorldManager {
 			score.incrementScore();
 		}
 		
-		if (MathUtils.random(200) == 0) {
-			consumables.add(new Potion());
-			consumables.get(consumables.size-1).createPhysics(physicsWorld);
+		if (MathUtils.random(500) == 0) {
+			//consumables.add(new Potion());
+			//consumables.get(consumables.size-1).createPhysics(physicsWorld);
+			enemies.add(new RedEnemy(RunnerGame.WIDTH / RunnerGame.PTM_RATIO, 1.5f));
+			enemies.get(enemies.size-1).createPhysics(physicsWorld);
 		}
 		
 		spawnGap -= Gdx.graphics.getDeltaTime();
@@ -107,8 +110,6 @@ public class WorldManager {
 			/*statics.add(new Barrel(new Sprite(new Texture("img/barrel.png")), RunnerGame.WIDTH/RunnerGame.PTM_RATIO + 1.2f, 3f));
 			statics.get(statics.size-1).createPhysics(physicsWorld);
 			*/
-			enemies.add(new RedEnemy(RunnerGame.WIDTH / RunnerGame.PTM_RATIO, 1.5f));
-			enemies.get(enemies.size-1).createPhysics(physicsWorld);
 			spawnGap = MathUtils.random(1.0f, 4.0f);
 		}
 		
@@ -130,6 +131,7 @@ public class WorldManager {
 		
 		for (DynamicCharacter enemy: enemies) {
 			enemy.draw(batch);
+			enemy.setResititution(0.8f);
 		}
 		
 		player.draw(batch);
@@ -158,20 +160,53 @@ public class WorldManager {
 	private class MyContactListener implements ContactListener {
 		@Override
 		public void beginContact(Contact contact) {
-			if (contact.getFixtureA().equals(player.getFixture()) || contact.getFixtureB().equals(player.getFixture())) {
-				
-				for (StaticCharacter c: statics) {
-					if (contact.getFixtureA().equals(c.getFixture()) || contact.getFixtureB().equals(c.getFixture())) {
-						if (player.getY() < (background.getHeight() + c.getHeight())) {
-							GAME_OVER = true;
-							player.setDead(true);
-						} else {
-							player.setGrounded(true);
-						}
+			
+			final Fixture f1 = contact.getFixtureA();
+			final Fixture f2 = contact.getFixtureB();
+
+			for (StaticCharacter object: statics) {
+				if (f1.equals(player.getFixture()) && f2.equals(object.getFixture())) {
+					if (player.getY() < background.getHeight() + object.getHeight()) {
+						GAME_OVER = true;
+						player.setDead(true);
 					} else {
 						player.setGrounded(true);
 					}
-				}
+				} 
+				
+				if (f2.equals(player.getFixture()) && f1.equals(object.getFixture())) {
+					if (player.getY() < background.getHeight() + object.getHeight()) {
+						GAME_OVER = true;
+						player.setDead(true);
+					} else {
+						player.setGrounded(true);
+					}
+				} 
+				
+				
+			}
+			
+			for (DynamicCharacter enemy: enemies) {
+				if (f1.equals(player.getFixture()) && f2.equals(enemy.getFixture())) {
+					if (player.getY() < background.getHeight() + enemy.getHeight()) {
+						GAME_OVER = true;
+						player.setDead(true);
+						
+						System.out.println("background height: " + background.getHeight() + "      enemy height: " + enemy.getHeight() + "     player y: " + player.getY() + "    total enemy height: " + (background.getHeight() + enemy.getHeight()));
+					} else {
+						enemy.setDead(true);
+						
+					}
+				} 
+				
+				if (f2.equals(player.getFixture()) && f1.equals(enemy.getFixture())) {
+					if (player.getY() < background.getHeight() + enemy.getHeight()) {
+						GAME_OVER = true;
+						player.setDead(true);
+					} else {
+						enemy.setDead(true);
+					}
+				} 
 			}
 		}
 

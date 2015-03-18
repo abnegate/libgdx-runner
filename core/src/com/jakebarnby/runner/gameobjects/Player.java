@@ -17,8 +17,6 @@ public class Player extends DynamicCharacter {
 
 	private Inventory inventory = new Inventory();
 	private TextureRegion deathImage = new TextureRegion(new Texture(Gdx.files.internal("img/death_image.png")));
-
-	private boolean dead = false;
 	private boolean jumping = false;
 	private boolean grounded = true;
 
@@ -41,7 +39,7 @@ public class Player extends DynamicCharacter {
 				jumping = false;
 			}
 		}
-		else if (dead) {	
+		else if (isDead()) {	
 			setCurrentFrame(deathImage);
 		}
 		else if (grounded) {
@@ -78,22 +76,6 @@ public class Player extends DynamicCharacter {
 			jumping = true;
 			grounded = false;
 		}
-	}
-	
-	/**
-	 * 
-	 * @return
-	 */
-	public boolean isDead() {
-		return dead;
-	}
-
-	/**
-	 * 
-	 * @param dead
-	 */
-	public void setDead(boolean dead) {
-		this.dead = dead;
 	}
 	
 	/**
