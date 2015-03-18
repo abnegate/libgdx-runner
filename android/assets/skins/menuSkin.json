@@ -1,0 +1,17 @@
+{
+    "com.badlogic.gdx.graphics.g2d.BitmapFont": {
+        "buttonfont": { "file": "fonts/buttonfont.fnt" }
+    },
+    
+    "com.badlogic.gdx.scenes.scene2d.ui.Label$LabelStyle": {
+    	"default" : { "font": buttonfont }
+    },
+    
+    "com.badlogic.gdx.scenes.scene2d.ui.TextButton$TextButtonStyle": { 
+        "default": { "up": "red_button_up" , "down": "red_button_down", "font": buttonfont, "pressedOffsetY": -4 }
+    }
+    
+    "com.badlogic.gdx.scenes.scene2d.ui.Window$WindowStyle": { 
+        "default": { "background": "red_panel", "titleFont": buttonfont }
+    }
+ }
