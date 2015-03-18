@@ -1,55 +1,21 @@
 package com.jakebarnby.runner.gameobjects;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.physics.box2d.World;
+import com.jakebarnby.runner.utils.AnimationController;
 
-public class Enemy implements Drawable {
+public class Enemy extends Character {
+
+	private boolean dead;
 	
-	
-	public Enemy() {
-		
+	public Enemy(float x, float y) {
+		super(x, y);
+		setAnimations(new AnimationController(new String[] {}, new int[] {}, new int[] {}, 0.07f));
 	}
 
 	@Override
 	public void draw(SpriteBatch batch) {
-		// TODO Auto-generated method stub
-		
+		if (!dead) {
+			
+		}
 	}
-
-	@Override
-	public void dispose() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void createPhysics(World physicsWorld) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public float getX() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public float getY() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public float getWidth() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public float getHeight() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
 }

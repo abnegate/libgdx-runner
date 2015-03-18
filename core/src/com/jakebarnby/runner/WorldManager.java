@@ -40,7 +40,7 @@ public class WorldManager {
 	private Box2DDebugRenderer physicsRenderder = new Box2DDebugRenderer();
 
 	private Background background = new Background();
-	private Player player = new Player();
+	private Player player = new Player(RunnerGame.WIDTH/2/RunnerGame.PTM_RATIO, 1.5f);
 	private Score score;
 	private Music music;
 
@@ -62,8 +62,8 @@ public class WorldManager {
 		
 		score = new Score(new BitmapFont(Gdx.files.internal("fonts/buttonfont.fnt"), Gdx.files.internal("fonts/buttonfont.png"), true),
 				"Score:",
-				RunnerGame.WIDTH /2/RunnerGame.PTM_RATIO,
-				RunnerGame.HEIGHT/2/RunnerGame.PTM_RATIO);
+				0.5f,
+				0.5f);
 		
 		if (RunnerGame.SOUND_ON) {
 			music = Gdx.audio.newMusic(Gdx.files.internal("audio/game_music.wav"));
@@ -90,9 +90,8 @@ public class WorldManager {
 	 */
 	public void draw() {
 		runTime += Gdx.graphics.getDeltaTime();
-		if (runTime % 1 == 0) {
+		if (runTime % 1 == 0f) {
 			score.incrementScore();
-			System.out.println("Score:" + score.getScore());
 		}
 		
 		if (MathUtils.random(200) == 0) {
@@ -122,6 +121,7 @@ public class WorldManager {
 	/*	for (Consumable consumable: consumables) {
 			consumable.draw(batch);
 		}*/
+		
 		player.draw(batch);
 		score.draw(batch);
 		batch.end();

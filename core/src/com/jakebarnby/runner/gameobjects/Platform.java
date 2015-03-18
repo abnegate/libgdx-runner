@@ -65,34 +65,22 @@ public class Platform implements Drawable {
 		kinematicBody.getWorld().destroyBody(kinematicBody);
 	}
 	
-	/**
-	 * Get the X value of this platform
-	 * @return The X value of this platform
-	 */
+	@Override
 	public float getX() {
 		return platform.getX();
 	}
 	
-	/**
-	 * 
-	 * @return
-	 */
+	@Override
 	public float getY() {
 		return platform.getY();
 	}
 
-	/**
-	 * 
-	 * @return
-	 */
+	@Override
 	public float getHeight() {
 		return platform.getHeight() / RunnerGame.PTM_RATIO;
 	}
 	
-	/**
-	 * 
-	 * @return
-	 */
+	@Override
 	public float getWidth() {
 		return platform.getWidth() / RunnerGame.PTM_RATIO;
 	}

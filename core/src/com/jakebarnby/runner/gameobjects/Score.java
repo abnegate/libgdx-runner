@@ -22,6 +22,8 @@ public class Score extends UILabel {
 	public Score(BitmapFont font, String text, float x, float y) {
 		super(font, text, x, y);
 		this.score = 0;
+		
+		getFont().setScale(getFont().getScaleX() / 60f);
 	}
 	
 	/**

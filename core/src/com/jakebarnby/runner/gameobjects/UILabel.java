@@ -3,7 +3,6 @@ package com.jakebarnby.runner.gameobjects;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.physics.box2d.World;
-import com.jakebarnby.runner.RunnerGame;
 /**
  * 
  * @author Jake
@@ -19,8 +18,8 @@ public class UILabel implements Drawable {
 	public UILabel(BitmapFont font, String text, float x, float y) {
 		this.font = font;
 		this.text = text;
-		this.x = x / RunnerGame.PTM_RATIO;
-		this.y = y / RunnerGame.PTM_RATIO;
+		this.x = x;
+		this.y = y;
 	}
 	
 	@Override
