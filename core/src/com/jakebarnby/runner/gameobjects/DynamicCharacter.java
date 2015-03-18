@@ -10,7 +10,7 @@ import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.jakebarnby.runner.RunnerGame;
 import com.jakebarnby.runner.utils.AnimationController;
 
-public class Character implements Drawable {
+public class DynamicCharacter implements Drawable {
 	public static final int TEXTURE_SCALE = 4;
 	
 	private AnimationController animations;
@@ -21,7 +21,7 @@ public class Character implements Drawable {
 	private float stateTime = 0f;
 	private float x, y;
 	
-	public Character(float x, float y){
+	public DynamicCharacter(float x, float y){
 		this.x = x;
 		this.y = y;
 	}
@@ -46,7 +46,7 @@ public class Character implements Drawable {
 		PolygonShape playerBox = new PolygonShape();  
 		playerBox.setAsBox(getWidth()/2, getHeight()/2);
 		
-		getDynamicBody().createFixture(playerBox, 1020.0f); 
+		getDynamicBody().createFixture(playerBox, 1200.0f); 
 		playerBox.dispose();
 		
 		getDynamicBody().setUserData(getCurrentFrame());

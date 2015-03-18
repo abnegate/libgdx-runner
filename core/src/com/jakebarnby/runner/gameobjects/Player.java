@@ -12,7 +12,7 @@ import com.jakebarnby.runner.utils.AnimationController;
  * @author Jake
  *
  */
-public class Player extends Character {
+public class Player extends DynamicCharacter {
 	private static final float MAX_JUMP_HEIGHT = 1.7f;
 
 	private Inventory inventory = new Inventory();

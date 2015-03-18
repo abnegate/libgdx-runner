@@ -23,7 +23,7 @@ public class Score extends UILabel {
 		super(font, text, x, y);
 		this.score = 0;
 		
-		getFont().setScale(getFont().getScaleX() / 60f);
+		
 	}
 	
 	/**
@@ -44,6 +44,6 @@ public class Score extends UILabel {
 	
 	@Override 
 	public void draw(SpriteBatch batch) {
-		getFont().draw(batch, getText() + " " + score, getX(), getY());
+		getFont().draw(batch, "jake barnby", getX(), getY());
 	}
 }

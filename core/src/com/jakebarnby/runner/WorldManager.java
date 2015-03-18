@@ -3,29 +3,30 @@ package com.jakebarnby.runner;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.Body;
-import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.Box2D;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.ContactImpulse;
 import com.badlogic.gdx.physics.box2d.ContactListener;
 import com.badlogic.gdx.physics.box2d.Manifold;
-import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.TimeUtils;
 import com.jakebarnby.runner.gameobjects.Background;
+import com.jakebarnby.runner.gameobjects.Barrel;
 import com.jakebarnby.runner.gameobjects.Consumable;
-import com.jakebarnby.runner.gameobjects.Enemy;
+import com.jakebarnby.runner.gameobjects.DynamicCharacter;
 import com.jakebarnby.runner.gameobjects.Platform;
 import com.jakebarnby.runner.gameobjects.Player;
 import com.jakebarnby.runner.gameobjects.Potion;
+import com.jakebarnby.runner.gameobjects.RedEnemy;
 import com.jakebarnby.runner.gameobjects.Score;
+import com.jakebarnby.runner.gameobjects.StaticCharacter;
 
 /**
  * Maintains the world
@@ -44,8 +45,8 @@ public class WorldManager {
 	private Score score;
 	private Music music;
 
-	private Array<Platform> platforms = new Array<Platform>();
-	private Array<Enemy> enemies = new Array<Enemy>();
+	private Array<StaticCharacter> statics = new Array<StaticCharacter>();
+	private Array<DynamicCharacter> enemies = new Array<DynamicCharacter>();
 	private Array<Consumable> consumables = new Array<Consumable>();
 	
 	private SpriteBatch batch;
@@ -60,10 +61,10 @@ public class WorldManager {
 		background.createPhysics(physicsWorld);
 		player.createPhysics(physicsWorld);
 		
-		score = new Score(new BitmapFont(Gdx.files.internal("fonts/buttonfont.fnt"), Gdx.files.internal("fonts/buttonfont.png"), true),
+		score = new Score(new BitmapFont(Gdx.files.internal("fonts/scorefont.fnt"), Gdx.files.internal("fonts/scorefont.png"), false),
 				"Score:",
-				0.5f,
-				0.5f);
+				4f,
+				2f);
 		
 		if (RunnerGame.SOUND_ON) {
 			music = Gdx.audio.newMusic(Gdx.files.internal("audio/game_music.wav"));
@@ -101,8 +102,13 @@ public class WorldManager {
 		
 		spawnGap -= Gdx.graphics.getDeltaTime();
 		if (spawnGap < 0 && !GAME_OVER) {
-			platforms.add(new Platform());
-			platforms.get(platforms.size-1).createPhysics(physicsWorld);
+			statics.add(new Platform(new Sprite(new Texture("img/platform.png")), RunnerGame.WIDTH/RunnerGame.PTM_RATIO + 1.2f, 1.46f));
+			statics.get(statics.size-1).createPhysics(physicsWorld);
+			/*statics.add(new Barrel(new Sprite(new Texture("img/barrel.png")), RunnerGame.WIDTH/RunnerGame.PTM_RATIO + 1.2f, 3f));
+			statics.get(statics.size-1).createPhysics(physicsWorld);
+			*/
+			enemies.add(new RedEnemy(RunnerGame.WIDTH / RunnerGame.PTM_RATIO, 1.5f));
+			enemies.get(enemies.size-1).createPhysics(physicsWorld);
 			spawnGap = MathUtils.random(1.0f, 4.0f);
 		}
 		
@@ -110,17 +116,21 @@ public class WorldManager {
 		
 		batch.begin();
 		background.draw(batch);
-		for (int i = 0; i < platforms.size; i++) {
-			platforms.get(i).draw(batch);
+		for (int i = 0; i < statics.size; i++) {
+			statics.get(i).draw(batch);
 			
-			if (platforms.get(i).getX() < -platforms.get(i).getWidth()) {
-				platforms.get(i).dispose();
-				platforms.removeIndex(i);
+			if (statics.get(i).getX() < -statics.get(i).getWidth()) {
+				statics.get(i).dispose();
+				statics.removeIndex(i);
 			}
 		}
 	/*	for (Consumable consumable: consumables) {
 			consumable.draw(batch);
 		}*/
+		
+		for (DynamicCharacter enemy: enemies) {
+			enemy.draw(batch);
+		}
 		
 		player.draw(batch);
 		score.draw(batch);
@@ -139,8 +149,8 @@ public class WorldManager {
 		batch.dispose();
 	}
 	
-	public Array<Platform> getPlatforms() {
-		return platforms;
+	public Array<StaticCharacter> getPlatforms() {
+		return statics;
 	}
 	
 	
@@ -150,9 +160,9 @@ public class WorldManager {
 		public void beginContact(Contact contact) {
 			if (contact.getFixtureA().equals(player.getFixture()) || contact.getFixtureB().equals(player.getFixture())) {
 				
-				for (Platform platform: platforms) {
-					if (contact.getFixtureA().equals(platform.getFixture()) || contact.getFixtureB().equals(platform.getFixture())) {
-						if (player.getY() < (background.getHeight() + platform.getHeight())) {
+				for (StaticCharacter c: statics) {
+					if (contact.getFixtureA().equals(c.getFixture()) || contact.getFixtureB().equals(c.getFixture())) {
+						if (player.getY() < (background.getHeight() + c.getHeight())) {
 							GAME_OVER = true;
 							player.setDead(true);
 						} else {
